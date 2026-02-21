@@ -239,7 +239,13 @@ p:last-child {
 
 @media (max-width: 768px) {
   .nav-toggle {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    min-height: 52px;
+    padding: var(--space-md);
+    font-size: 2rem;
   }
 
   .nav {
@@ -260,8 +266,9 @@ p:last-child {
   }
 
   .nav.is-open {
-    max-height: 320px;
+    max-height: min(420px, 85vh);
     opacity: 1;
+    overflow-y: auto;
   }
 
   .nav__list {
@@ -740,6 +747,47 @@ main {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* --- Book Now page --- */
+.book-cta {
+  margin-bottom: var(--space-2xl);
+}
+
+.book-cta .btn-group {
+  margin-top: var(--space-md);
+}
+
+.calendar-embed-wrap {
+  margin-top: var(--space-xl);
+  padding: var(--space-lg);
+  background: var(--color-cream-warm);
+  border-radius: 12px;
+  border: 2px solid var(--color-pink-light);
+}
+
+.calendar-note {
+  margin-bottom: var(--space-md);
+  font-size: 0.95rem;
+  color: var(--color-text-soft);
+}
+
+.calendar-embed-wrap h2 {
+  margin-bottom: var(--space-sm);
+}
+
+.calendar-embed {
+  width: 100%;
+  min-height: 400px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .calendar-embed {
+    min-height: 360px;
+    height: 360px;
+  }
 }
 
 /* --- Gallery full-screen lightbox --- */
