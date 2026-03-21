@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <title>Book Now | The Host With The Most</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -26,7 +28,7 @@
           <li class="nav__item"><a class="nav__link" href="about.html">About</a></li>
           <li class="nav__item"><a class="nav__link" href="packages.html">Packages</a></li>
           <li class="nav__item"><a class="nav__link" href="gallery.html">Gallery</a></li>
-          <li class="nav__item"><a class="nav__link" href="book-now.html">Book Now</a></li>
+          <li class="nav__item"><a class="nav__link" href="book-now.html">Request Consultation</a></li>
         </ul>
       </nav>
     </div>
@@ -36,33 +38,79 @@
     <section class="section">
       <div class="container">
         <header class="text-center">
-          <h1>Book Now 📅</h1>
-          <p>Check availability below and reach out to secure your date. We&rsquo;re here for local and destination events.</p>
+          <h1>Schedule Your Consultation</h1>
+          <p>Tell us about your event and we&rsquo;ll follow up to discuss your vision, date, and package. We&rsquo;re here for local and destination events.</p>
         </header>
 
         <div class="book-cta">
-          <p class="text-center">Contact Danisha to confirm your date and package:</p>
+          <p class="text-center">Prefer to reach out directly? Call or email:</p>
           <div class="btn-group btn-group--center">
-            <a href="tel:252-452-4308" class="btn btn--primary">📞 Call 252-452-4308</a>
-            <a href="mailto:Passthemic24@yahoo.com?subject=Booking%20inquiry" class="btn btn--secondary">✉️ Email to Book</a>
+            <a href="tel:252-452-4308" class="btn btn--primary">Call 252-452-4308</a>
+            <a href="mailto:Passthemic81@gmail.com?subject=Booking%20inquiry" class="btn btn--secondary">Email Us</a>
           </div>
         </div>
 
-        <div class="calendar-embed-wrap">
-          <h2 class="text-center">Availability</h2>
-          <p class="calendar-note text-center">View the calendar below for a sense of availability. Deposits required to secure your date.</p>
-          <p class="calendar-note text-center" style="font-size:0.85rem;">To show your own Google Calendar: open <a href="https://calendar.google.com" target="_blank" rel="noopener">Google Calendar</a> → your calendar → Settings → Integrate calendar → copy the embed code, then replace the iframe <code>src</code> in <code>book-now.html</code>.</p>
-          <!-- Replace the iframe src below with your Google Calendar embed URL (Calendar → Settings → Integrate calendar) -->
-          <iframe
-            class="calendar-embed"
-            src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23FFFBF7&amp;ctz=America%2FNew_York&amp;showTitle=1&amp;showNav=1&amp;showPrint=0&amp;showTabs=1&amp;showCalendars=0&amp;showTz=0&amp;mode=MONTH&amp;src=passthemic24%40yahoo.com&amp;color=%23E8B4B8"
-            style="border:0"
-            width="100%"
-            height="600"
-            frameborder="0"
-            scrolling="no"
-            title="Booking calendar">
-          </iframe>
+        <div class="consult-form-wrap" id="consult-form">
+          <h2 class="text-center">Request a consultation</h2>
+          <p class="consult-form-intro text-center">Fill out the form below. Deposits are required to secure your date after we connect.</p>
+
+          <p class="form-success text-center" id="form-success" hidden role="status">Thank you! Your message was sent. We&rsquo;ll be in touch soon.</p>
+
+          <!-- Submissions go to Passthemic81@gmail.com via FormSubmit (free). First time you use it, check that inbox to activate. -->
+          <form
+            class="consult-form"
+            action="https://formsubmit.co/Passthemic81@gmail.com"
+            method="POST"
+          >
+            <input type="hidden" name="_subject" value="Consultation request — The Host With The Most">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" id="formsubmit-next" value="">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <div class="form-row">
+              <label class="form-label" for="consult-name">Your name <span class="form-required">*</span></label>
+              <input class="form-input" type="text" id="consult-name" name="name" required autocomplete="name" placeholder="Jane Doe">
+            </div>
+
+            <div class="form-row form-row--split">
+              <div class="form-field">
+                <label class="form-label" for="consult-email">Email <span class="form-required">*</span></label>
+                <input class="form-input" type="email" id="consult-email" name="email" required autocomplete="email" placeholder="you@example.com">
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="consult-phone">Phone</label>
+                <input class="form-input" type="tel" id="consult-phone" name="phone" autocomplete="tel" placeholder="252-452-4308">
+              </div>
+            </div>
+
+            <div class="form-row form-row--split">
+              <div class="form-field">
+                <label class="form-label" for="consult-event-type">Event type</label>
+                <select class="form-input form-select" id="consult-event-type" name="event_type">
+                  <option value="">Select&hellip;</option>
+                  <option value="Wedding">Wedding</option>
+                  <option value="Corporate">Corporate / gala</option>
+                  <option value="Birthday / celebration">Birthday / celebration</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="consult-date">Preferred event date</label>
+                <div class="form-input-shell">
+                  <input class="form-input form-input--date" type="date" id="consult-date" name="event_date">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label" for="consult-message">Tell us about your event <span class="form-required">*</span></label>
+              <textarea class="form-input form-textarea" id="consult-message" name="message" required rows="5" placeholder="Venue, guest count, vibe you&rsquo;re going for, questions&hellip;"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">Send request</button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
@@ -73,12 +121,29 @@
       <div class="site-footer__brand">The Host With The Most</div>
       <div class="site-footer__contact">
         <strong>Danisha Lowe</strong><br>
-        <a href="tel:252-452-4308">📞 252-452-4308</a> &bull; <a href="mailto:Passthemic24@yahoo.com">✉️ Passthemic24@yahoo.com</a>
+        <a href="tel:252-452-4308">252-452-4308</a> &bull; <a href="mailto:Passthemic81@gmail.com">Passthemic81@gmail.com</a>
       </div>
-      <p class="site-footer__sub">In partnership with DJ SmooveK &ndash; A Whole Vibe Entertainment 🎵</p>
+      <p class="site-footer__sub">In partnership with DJ SmooveK &ndash; A Whole Vibe Entertainment</p>
     </div>
   </footer>
 
   <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var next = document.getElementById('formsubmit-next');
+      if (next) {
+        next.value = window.location.origin + window.location.pathname + '?sent=1';
+      }
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('sent') === '1') {
+        var success = document.getElementById('form-success');
+        var form = document.querySelector('.consult-form');
+        var intro = document.querySelector('.consult-form-intro');
+        if (success) success.hidden = false;
+        if (form) form.setAttribute('hidden', '');
+        if (intro) intro.setAttribute('hidden', '');
+      }
+    })();
+  </script>
 </body>
 </html>

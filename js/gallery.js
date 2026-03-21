@@ -1,10 +1,46 @@
 /**
- * Gallery slideshow: one image per screen, thumbnails, full-screen lightbox.
+ * Gallery slideshow: images + video, thumbnails, full-screen lightbox.
  */
 (function () {
   'use strict';
 
+  /** Randomize gallery order each visit; keeps each slide + thumbnail paired. */
+  function shuffleGallerySlides(trackEl, thumbsWrap) {
+    if (!trackEl || !thumbsWrap) return;
+    var slideEls = Array.prototype.slice.call(trackEl.querySelectorAll('.gallery-slide'));
+    var thumbEls = Array.prototype.slice.call(thumbsWrap.querySelectorAll('.gallery-thumb'));
+    if (slideEls.length !== thumbEls.length || slideEls.length < 2) return;
+
+    var pairs = slideEls.map(function (slide, i) {
+      return { slide: slide, thumb: thumbEls[i] };
+    });
+
+    for (var i = pairs.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pairs[i];
+      pairs[i] = pairs[j];
+      pairs[j] = tmp;
+    }
+
+    pairs.forEach(function (p, idx) {
+      trackEl.appendChild(p.slide);
+      thumbsWrap.appendChild(p.thumb);
+      p.slide.setAttribute('data-index', String(idx));
+      p.thumb.setAttribute('data-index', String(idx));
+      var isVid = p.slide.classList.contains('gallery-slide--video');
+      p.thumb.classList.toggle('gallery-thumb--video', isVid);
+      var n = idx + 1;
+      p.thumb.setAttribute(
+        'aria-label',
+        isVid ? 'Go to video ' + n : 'Go to image ' + n
+      );
+    });
+  }
+
   var track = document.querySelector('.gallery-track');
+  var thumbsWrap = document.querySelector('.gallery-thumbs');
+  shuffleGallerySlides(track, thumbsWrap);
+
   var slides = document.querySelectorAll('.gallery-slide');
   var prevBtn = document.querySelector('.gallery-prev');
   var nextBtn = document.querySelector('.gallery-next');
@@ -14,27 +50,57 @@
   var current = 0;
 
   var lightbox = document.getElementById('gallery-lightbox');
+  var lightboxInner = lightbox ? lightbox.querySelector('.gallery-lightbox-inner') : null;
   var lightboxImg = lightbox ? lightbox.querySelector('.gallery-lightbox-img') : null;
+  var lightboxVideo = lightbox ? lightbox.querySelector('.gallery-lightbox-video') : null;
   var lightboxClose = lightbox ? lightbox.querySelector('.gallery-lightbox-close') : null;
   var lightboxPrev = lightbox ? lightbox.querySelector('.gallery-lightbox-prev') : null;
   var lightboxNext = lightbox ? lightbox.querySelector('.gallery-lightbox-next') : null;
 
-  function getSlideSrc(index) {
-    var slide = slides[index];
-    if (slide) {
-      var img = slide.querySelector('img');
-      return img ? img.getAttribute('src') : '';
+  /** Load gallery slide video only when viewed (data-src → src). Saves ~20MB on initial load. */
+  function ensureSlideVideoLoaded(vid) {
+    if (!vid) return;
+    var ds = vid.getAttribute('data-src');
+    if (ds && !vid.getAttribute('src')) {
+      vid.setAttribute('src', ds);
+      vid.load();
     }
-    return '';
+  }
+
+  function getSlideMedia(index) {
+    var slide = slides[index];
+    if (!slide) return null;
+    var vid = slide.querySelector('video');
+    if (vid) {
+      ensureSlideVideoLoaded(vid);
+      return { type: 'video', src: vid.getAttribute('src') };
+    }
+    var img = slide.querySelector('img');
+    if (img) {
+      return { type: 'image', src: img.getAttribute('src') };
+    }
+    return null;
+  }
+
+  function pauseAllSlideVideos() {
+    document.querySelectorAll('.gallery-slide-video').forEach(function (v) {
+      v.pause();
+    });
   }
 
   function goTo(index) {
     if (index < 0) index = total - 1;
     if (index >= total) index = 0;
+    pauseAllSlideVideos();
     current = index;
 
     if (track) {
       track.style.transform = 'translateX(-' + current * 100 + '%)';
+    }
+
+    var activeSlide = slides[current];
+    if (activeSlide) {
+      ensureSlideVideoLoaded(activeSlide.querySelector('video'));
     }
 
     thumbs.forEach(function (thumb, i) {
@@ -54,20 +120,46 @@
     goTo(current - 1);
   }
 
+  function setLightboxMedia(index) {
+    var media = getSlideMedia(index);
+    if (!media || !lightboxInner || !lightboxImg || !lightboxVideo) return;
+
+    if (media.type === 'video') {
+      lightboxInner.classList.add('is-video');
+      lightboxImg.removeAttribute('src');
+      lightboxVideo.setAttribute('src', media.src);
+      lightboxVideo.load();
+    } else {
+      lightboxInner.classList.remove('is-video');
+      lightboxVideo.pause();
+      lightboxVideo.removeAttribute('src');
+      lightboxVideo.load();
+      lightboxImg.setAttribute('src', media.src);
+    }
+  }
+
   function openLightbox(index) {
     if (index < 0) index = total - 1;
     if (index >= total) index = 0;
     current = index;
-    var src = getSlideSrc(current);
-    if (lightbox && lightboxImg && src) {
-      lightboxImg.setAttribute('src', src);
-      lightbox.classList.add('is-open');
-      lightbox.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    }
+    var media = getSlideMedia(current);
+    if (!lightbox || !media) return;
+
+    setLightboxMedia(current);
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    goTo(current);
   }
 
   function closeLightbox() {
+    if (lightboxVideo) {
+      lightboxVideo.pause();
+      lightboxVideo.removeAttribute('src');
+      lightboxVideo.load();
+    }
+    if (lightboxInner) lightboxInner.classList.remove('is-video');
+    if (lightboxImg) lightboxImg.removeAttribute('src');
     if (lightbox) {
       lightbox.classList.remove('is-open');
       lightbox.setAttribute('aria-hidden', 'true');
@@ -77,16 +169,14 @@
 
   function lightboxShowNext() {
     current = (current + 1) % total;
-    var src = getSlideSrc(current);
-    if (lightboxImg && src) lightboxImg.setAttribute('src', src);
+    setLightboxMedia(current);
     goTo(current);
   }
 
   function lightboxShowPrev() {
     current = current - 1;
     if (current < 0) current = total - 1;
-    var src = getSlideSrc(current);
-    if (lightboxImg && src) lightboxImg.setAttribute('src', src);
+    setLightboxMedia(current);
     goTo(current);
   }
 
@@ -97,7 +187,6 @@
     thumb.addEventListener('click', function () {
       var index = parseInt(thumb.getAttribute('data-index'), 10);
       if (!isNaN(index)) {
-        goTo(index);
         openLightbox(index);
       }
     });
