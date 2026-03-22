@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="preload" href="images/logo.jpeg" as="image">
 </head>
 <body>
   <header class="site-header">
@@ -69,17 +70,17 @@
 
             <div class="form-row">
               <label class="form-label" for="consult-name">Your name <span class="form-required">*</span></label>
-              <input class="form-input" type="text" id="consult-name" name="name" required autocomplete="name" placeholder="Jane Doe">
+              <input class="form-input" type="text" id="consult-name" name="name" required autocomplete="name" placeholder="Name">
             </div>
 
             <div class="form-row form-row--split">
               <div class="form-field">
                 <label class="form-label" for="consult-email">Email <span class="form-required">*</span></label>
-                <input class="form-input" type="email" id="consult-email" name="email" required autocomplete="email" placeholder="you@example.com">
+                <input class="form-input" type="email" id="consult-email" name="email" required autocomplete="email" placeholder="Email">
               </div>
               <div class="form-field">
                 <label class="form-label" for="consult-phone">Phone</label>
-                <input class="form-input" type="tel" id="consult-phone" name="phone" autocomplete="tel" placeholder="252-452-4308">
+                <input class="form-input" type="tel" id="consult-phone" name="phone" autocomplete="tel" placeholder="Phone">
               </div>
             </div>
 
@@ -104,7 +105,7 @@
 
             <div class="form-row">
               <label class="form-label" for="consult-message">Tell us about your event <span class="form-required">*</span></label>
-              <textarea class="form-input form-textarea" id="consult-message" name="message" required rows="5" placeholder="Venue, guest count, vibe you&rsquo;re going for, questions&hellip;"></textarea>
+              <textarea class="form-input form-textarea" id="consult-message" name="message" required rows="5" placeholder="Message"></textarea>
             </div>
 
             <div class="form-actions">
@@ -128,6 +129,7 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/preload-assets.js"></script>
   <script>
     (function () {
       var next = document.getElementById('formsubmit-next');
